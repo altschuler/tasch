@@ -1,0 +1,48 @@
+<div class="row">
+    <form class="form-inline">
+        <input class="form-control" type="text" #searchQuery placeholder="Search by name" />
+
+        <button class="btn btn-default" (click)="search(searchQuery.value)">Search</button>
+    </form>
+
+    <form class="form-inline">
+        <label>Sort</label>
+        <select class="form-control col-sm-2" #sort (change)="changeSortOrder(sort.value)">
+            <option value="1">Asc</option>
+            <option value="-1">Dsc</option>
+        </select>
+    </form>
+
+    <hr/>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Pressure</th>
+                <th>Operative</th>
+            </tr>
+        </thead>
+
+        <tr *ngFor="#machine of machines | paginate: { currentPage: currentPage, itemsPerPage: pageSize, totalItems: numberOfMachines }">
+            <td>
+                <a [routerLink]="['/MachinesDetails', { machineId: machine._id }]">{{ machine.name }}</a>
+            </td>
+
+            <td>{{ machine.pressure }}</td>
+
+            <td>
+
+                <span *ngIf="machine.isOperative" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                <span *ngIf="!machine.isOperative" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </td>
+
+            <td>
+                <button class="btn btn-danger" (click)="removeMachine(machine)">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <pagination-controls (change)="onPaginationChange($event.page)"></pagination-controls>
+</div>
